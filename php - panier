@@ -1,0 +1,37 @@
+# php - panier
+
+<?php
+	session_start();
+	include 'includes/header.inc.php';
+	include 'includes/functions.inc.php';
+
+	$connect=connect();
+	echo'<a href="index.php">Boutique >></a><br/>
+		 <a href="commander.php">Commander</a>';
+	$sql="SELECT * FROM panier, articles WHERE userId=".$_SESSION['userId']." AND articleId=idArticle";
+	$result=$connect->query($sql);
+	echo '<table border="1" cellpadding="10" width="100%">
+		  <tr><th>&nbsp;</th>
+		  	  <th>Désignation</th>
+		  	  <th>Prix Unitaire</th>
+		  	  <th>Quantité</th>
+		  	  <th>Total</th>';
+	$total=0;
+	while($val=mysqli_fetch_array($result)){
+		echo'<tr>
+				<td><img src="articles/'.$val['image'].'" alt="" width="100"></td>
+				<td>'.$val['nom'].'</td>
+				<td>'.$val['prix'].'</td>
+				<td>'.$val['quantite'].'</td>
+				<td>'.$val['prix']*$val['quantite'].'€</td>
+			</tr>
+		';
+		$total=$total+($val['prix']*$val['quantite']);
+	}
+	echo'<tr>
+			<td colspan="4">Total:</td>
+			<td>'.$total.'</td>
+		</tr>
+		</table>';
+	include 'includes/footer.inc.php';
+?>
